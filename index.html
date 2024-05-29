@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nested Comments Section</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+
+      .comments-section {
+        width: 50%;
+        margin: 0 auto;
+      }
+
+      #comment-form {
+        display: flex;
+        margin-bottom: 20px;
+      }
+
+      #comment-form input {
+        flex: 1;
+        padding: 10px;
+        font-size: 14px;
+        margin-right: 10px;
+      }
+
+      #comment-form button {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+
+      .comment {
+        margin: 10px 0;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        position: relative;
+      }
+
+      .reply-button {
+        color: #007bff;
+        cursor: pointer;
+        margin-top: 10px;
+        display: block;
+      }
+
+      .reply-form {
+        display: none;
+        margin-top: 10px;
+      }
+
+      .reply-form input {
+        width: calc(100% - 100px);
+        padding: 10px;
+        font-size: 14px;
+      }
+
+      .reply-form button {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+
+      .replies {
+        margin-left: 30px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="comments-section">
+      <h2>Comments</h2>
+      <form id="comment-form">
+        <input
+          type="text"
+          id="comment-input"
+          placeholder="Add a comment"
+          required
+        />
+        <button type="submit">Submit</button>
+      </form>
+      <div id="comments-container"></div>
+    </div>
+
+    <script>
+      document
+        .getElementById("comment-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const commentInput = document.getElementById("comment-input");
+          if (commentInput.value.trim()) {
+            addComment(commentInput.value);
+            commentInput.value = "";
+          }
+        });
+
+      function addComment(text, parentElement = null) {
+        const comment = document.createElement("div");
+        comment.className = "comment";
+        comment.innerHTML = `
+                <p>${text}</p>
+                <span class="reply-button">Add a reply</span>
+                <div class="reply-form">
+                    <input type="text" placeholder="Add a reply">
+                    <button>Submit</button>
+                </div>
+                <div class="replies"></div>
+            `;
+
+        if (parentElement) {
+          parentElement.querySelector(".replies").appendChild(comment);
+        } else {
+          document.getElementById("comments-container").appendChild(comment);
+        }
+
+        const replyButton = comment.querySelector(".reply-button");
+        const replyForm = comment.querySelector(".reply-form");
+        const replyInput = replyForm.querySelector("input");
+        const replySubmit = replyForm.querySelector("button");
+
+        replyButton.addEventListener("click", function () {
+          replyForm.style.display = "block";
+          replyInput.focus();
+        });
+
+        replyForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+          if (replyInput.value.trim()) {
+            addComment(replyInput.value, comment);
+            replyInput.value = "";
+            replyForm.style.display = "none";
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
